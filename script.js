@@ -1,6 +1,9 @@
 import { Oferta } from "./class/oferta.js";
 const oferty=document.querySelector('#oferty');
 const url='./data.json';
+let arr = [];
+const search = document.querySelector('#search');
+
 async function get() {
     try {
       const response = await fetch(url);
@@ -18,10 +21,9 @@ async function get() {
       );
       alert.showAlert();
     }
-   
+    selectItemEvent()
   }
-  get()
-  const search = document.querySelector('#search');
+   
   function searchItem() {
    
     const searchValue = search.value.toUpperCase();
@@ -35,4 +37,25 @@ async function get() {
     });
   }
 
+ function selectItemEvent(){ 
+    const oferty = document.querySelectorAll('.oferta');
+    oferty.forEach(element => {
+        element.addEventListener('click', getSelected)
+    })           
+}
+
+async function getSelected(){
+ await arr.push(this.id); 
+ oferty.innerHTML='';
+const response = await fetch(url);
+const data = await response.json();
+  data.forEach(element => {
+    if(arr[arr.length-1]===element.ido){
+      const oferta = new Oferta(element.ido, element.potwierdzenie, element.kraj, element.rejon, element.nazwa, element.cena);
+      oferty.innerHTML+=oferta.render();
+    }
+  })
+}
+
+get()
 search.addEventListener('keyup', searchItem);
